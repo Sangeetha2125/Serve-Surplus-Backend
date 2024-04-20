@@ -4,16 +4,26 @@ const order = async (req,res)=>{
   try {
     const {id} = req.params;
     const donor = await Donors.findOne({_id:id});
-    console.log("Donor",donor)
     orders.forEach((order)=>{
+      let flag = false;
       donor.donations.forEach(item=>{
-        if(item.food===order.food)
-        {
+        if(item.food===order.food && item._id==order._id)
+        {        
+          if(!flag)
+          {
+            if(item.quantity-order.quantity<0)
+            throw Error("Reduce the quantity");
           item.quantity-=order.quantity;
           if(item.quantity<=0)
             donor.donations.splice(donor.donations.indexOf(item),1);
+          }
+          flag = true
         }
       })
+      if(!flag)
+      {
+        throw Error("Food not available");
+      }
     })
 
     const updatedDonation = await donor.save();
