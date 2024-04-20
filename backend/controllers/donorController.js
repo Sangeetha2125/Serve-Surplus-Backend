@@ -3,9 +3,8 @@ const addDonation = async (req,res)=>{
   try {
     const donor = await Donors.findOne({userId:req.user});
     const {donations} = req.body;
-    const currentdonations = donations.map(({food,quantity})=>({food,quantity}));
-    donor.donations = donor.donations.concat(currentdonations);
-    donor.donationHistory = donor.donationHistory.concat(currentdonations);
+    donor.donations = donor.donations.concat(donations);
+    donor.donationHistory = donor.donationHistory.concat(donations);
     const updatedDonor = await donor.save();
     res.status(201).json(updatedDonor);
   }

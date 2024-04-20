@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const bookingRoutes = require("./routes/bookingRoutes")
 const profileRoutes = require("./routes/profileRoutes")
 const donorRoutes = require("./routes/donorRoutes")
+const receiverRoutes = require("./routes/receiverRoutes")
 app.use(cors());
 app.use(express.json())
 
@@ -15,6 +16,7 @@ app.use("/api/auth",authRoutes);
 app.use("/api/booking",bookingRoutes)
 app.use("/api/profile",profileRoutes);
 app.use("/api/donor",donorRoutes)
+app.use("/api/receiver",receiverRoutes)
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
