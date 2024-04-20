@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const Schema = mongoose.Schema;
+
 const orderDetailsSchema = new Schema({
   food: String,
   quantity: Number,

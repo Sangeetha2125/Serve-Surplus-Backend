@@ -1,9 +1,13 @@
 const Donors = require("../models/donorModel");
+const Orders = require("../models/ordersModel");
+const Receivers = require("../models/receiverModel")
 const order = async (req,res)=>{
   const {orders} = req.body;
   try {
     const {id} = req.params;
     const donor = await Donors.findOne({_id:id});
+    const receiver = await Receivers.findOne({userId:req.user})
+    console.log(receiver)
     orders.forEach((order)=>{
       let flag = false;
       donor.donations.forEach(item=>{
@@ -27,7 +31,20 @@ const order = async (req,res)=>{
     })
 
     const updatedDonation = await donor.save();
-    res.status(200).json(updatedDonation);
+
+    const existingOrder = await Orders.findOne({donor_id:donor._id,receiver_id:receiver._id});
+    console.log(existingOrder)
+    if(existingOrder)
+    {
+      existingOrder.orders = existingOrder.orders.concat(orders);
+      const updatedOrder = await existingOrder.save();
+      res.status(201).json(updatedOrder);
+    }
+    else {
+      const newOrder = await Orders.create({donor_id:donor._id,receiver_id:receiver._id,orders});
+      res.status(200).json(newOrder)
+    }
+
   }
   catch(error)
   {
