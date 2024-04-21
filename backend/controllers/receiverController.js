@@ -7,7 +7,6 @@ const order = async (req,res)=>{
     const {id} = req.params;
     const donor = await Donors.findOne({_id:id});
     const receiver = await Receivers.findOne({userId:req.user})
-    console.log(receiver)
     orders.forEach((order)=>{
       let flag = false;
       donor.donations.forEach(item=>{
@@ -52,4 +51,4 @@ const order = async (req,res)=>{
   }
 }
 
-module.exports = {order};
+module.exports = {order}; 
