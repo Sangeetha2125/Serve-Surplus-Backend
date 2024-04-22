@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const receiverSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required:  true
   },
   phone: {
     type: String,
