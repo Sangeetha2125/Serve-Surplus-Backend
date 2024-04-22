@@ -2,6 +2,23 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
+const donationSchema = new Schema({
+  food: String,
+  quantity: Number,
+  donatedAt: {
+    type:Date,
+    default: new Date()
+  }
+})
+
+const donationHistorySchema = new Schema({
+  food: String,
+  quantity: Number,
+  donatedAt: {
+    type:Date,
+    default: new Date()
+  }
+})
 const donorSchema = new Schema({
   name: {
     type: String,
@@ -31,10 +48,8 @@ const donorSchema = new Schema({
     type: String,
     required: true
   },
-  donations: {
-    type: Schema.Types.Mixed,
-    default:{}
-  },
+  donations: [donationSchema],
+  donationHistory: [donationHistorySchema],
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true

@@ -2,7 +2,9 @@ const Donors = require("../models/donorModel");
 const addDonation = async (req,res)=>{
   try {
     const donor = await Donors.findOne({userId:req.user});
-    Object.assign(donor.donations, req.body);
+    const {donations} = req.body;
+    donor.donations = donor.donations.concat(donations);
+    donor.donationHistory = donor.donationHistory.concat(donations);
     const updatedDonor = await donor.save();
     res.status(201).json(updatedDonor);
   }
@@ -12,4 +14,11 @@ const addDonation = async (req,res)=>{
   }
 }
 
-module.exports = {addDonation};
+const getDonationHistory = async(req,res)=>{
+  const {id} = req.params;
+  const {donationHistory} = await Donors.findOne({_id:id});
+  res.status(200).json(donationHistory);
+}
+
+
+module.exports = {addDonation,getDonationHistory};
