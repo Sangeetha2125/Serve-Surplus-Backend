@@ -12,6 +12,9 @@ app.use(cors());
 app.use(express.json())
 
 //routes
+app.get("/",(req,res)=>{
+  res.send("Serve Surplus")
+})
 app.use("/api/auth",authRoutes);
 app.use("/api/booking",bookingRoutes)
 app.use("/api/profile",profileRoutes);
