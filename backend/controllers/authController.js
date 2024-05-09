@@ -45,7 +45,7 @@ const getUserData = async(req,res)=>{
       const {_id} = jwt.verify(token,process.env.SECRET_KEY)
       const user = await User.findOne({_id}).select('email role');
       if(user)
-        return res.status(200).json({email,role,token})
+        return res.status(200).json({email:user.email,role:user.role,token})
       else
         return res.status(401).json({error:"Invalid token"})
     } 
