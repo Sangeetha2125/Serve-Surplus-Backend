@@ -1,10 +1,11 @@
 const Donors = require("../models/donorModel");
+const User = require("../models/userModel")
 const Receivers = require("../models/receiverModel");
 
 const createProfile = async (req,res)=>{
     try {
       if(req.role.toUpperCase() === "DONOR"){
-        await Donors.validate({...req.body})
+        await User.validate({...req.body})
         const donor = await Donors.create({...req.body,userId:req.user});
         res.status(201).json(donor);
       }

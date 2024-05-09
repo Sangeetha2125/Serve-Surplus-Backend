@@ -16,7 +16,35 @@ const userSchema = new Schema({
   role: {
     type: String,
     required: true
-  }
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  doorNumber: {
+    type: String,
+    required: true
+  },
+  street: {
+    type: String,
+    required: true
+  },
+  area: {
+    type: String,
+    required: true
+  },
+  city: {
+    type: String,
+    required: true
+  },
+  pincode: {
+    type: String,
+    required: true
+  },
 })
 
 userSchema.statics.signUp = async function(email,password,role){
@@ -51,6 +79,13 @@ userSchema.statics.login = async function(email,password,role){
   if(!match)
     throw Error("Incorrect Password");
   return user;
+}
+
+userSchema.statics.validate = function(user) {
+  if(!user.name || !user.phone || !user.doorNumber || !user.street || !user.area || 
+     !user.area || !user.city || !user.pincode)
+     throw Error("All the fields must be filled!");
+     
 }
 
 module.exports = mongoose.model("User",userSchema);
