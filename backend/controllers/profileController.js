@@ -6,6 +6,7 @@ const createProfile = async (req,res)=>{
     try {
       if(req.role.toUpperCase() === "DONOR"){
         await User.validate({...req.body})
+        await User.findOneAndUpdate({_id:req.user._id}, {...req.body}, {new: true})
         const donor = await Donors.create({userId:req.user});
         res.status(201).json(donor);
       }
