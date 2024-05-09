@@ -37,6 +37,22 @@ const updateProfile = async (req,res)=>{
   }
 }
 
-module.exports = {createProfile,updateProfile};
+const getProfile = async(req,res)=>{
+  try {
+    if(req.role.toUpperCase() === "DONOR"){
+      const donor = await Donors.find({userId:req.user});
+      res.status(201).json(donor);
+    }
+    else if(req.role.toUpperCase() === "RECEIVER") {
+      const receiver = await Receivers.create({userId:req.user}); 
+      res.status(201).json(receiver);
+    }
+  }
+  catch(error)
+  {
+    res.status(500).json({error:error.message});
+  }
+}
+module.exports = {createProfile,updateProfile,getProfile};
 
 
