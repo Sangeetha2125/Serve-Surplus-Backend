@@ -30,7 +30,8 @@ const login = async (req,res)=>{
 }
 
 const getUserData = async(req,res)=>{
-  const {authorization} = req.headers
+  console.log(req.headers)
+  const authorization = req.header("Authorization")
 
   if(!authorization)
     return res.status(401).json({error:'Authorization token required'})
@@ -40,6 +41,7 @@ const getUserData = async(req,res)=>{
       return res.status(401).json({error:"Invalid token"})
     }
 
+    console.log(token)
     try {
       const {_id} = jwt.verify(token,process.env.SECRET_KEY)
       const user = await User.findOne({_id}).select('email role');
