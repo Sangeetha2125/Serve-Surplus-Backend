@@ -30,8 +30,7 @@ const login = async (req,res)=>{
 }
 
 const getUserData = async(req,res)=>{
-  console.log(req.headers)
-  const authorization = req.header("Authorization")
+  const {authorization} = req.headers
 
   if(!authorization)
     return res.status(401).json({error:'Authorization token required'})
