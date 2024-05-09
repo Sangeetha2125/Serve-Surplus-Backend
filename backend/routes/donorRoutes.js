@@ -6,6 +6,6 @@ const router = express.Router();
 router.use(requireAuth);
 router.use(donorAuth);
 router.patch("/",addDonation);
-router.get("/:id",getDonationHistory);
+router.get("/history",getDonationHistory);
 
 module.exports = router;           
