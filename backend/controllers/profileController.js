@@ -8,12 +8,12 @@ const createProfile = async (req,res)=>{
         await User.validate({...req.body})
         await User.findOneAndUpdate({_id:req.user._id}, {...req.body}, {new: true})
         const donor = await Donors.create({userId:req.user});
-        res.status(201).json(donor);
+        return res.status(201).json(donor);  
       }
       else if(req.role.toUpperCase() === "RECEIVER") {
         await Receivers.validate({...req.body})
         const receiver = await Receivers.create({...req.body,userId:req.user}); 
-        res.status(201).json(receiver);
+        return res.status(201).json(receiver);
       }
     }
     catch(error)
