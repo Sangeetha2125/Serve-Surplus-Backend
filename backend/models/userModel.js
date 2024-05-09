@@ -82,7 +82,7 @@ userSchema.statics.login = async function(email,password,role){
 }
 
 userSchema.statics.validate = function(user) {
-  if(!user.name || !user.phone || !user.doorNumber || !user.street || !user.area || 
+  if(!user.name || !user.phone || !user.doorNumber || !user.street ||
      !user.area || !user.city || !user.pincode)
      throw Error("All the fields must be filled!");
      
