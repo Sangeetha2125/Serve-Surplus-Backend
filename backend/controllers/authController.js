@@ -8,7 +8,7 @@ const register = async(req,res)=>{
   try {    
     const user = await User.signUp(email,password,role);
     const token = createToken(user._id);
-    res.status(200).json({email,token});
+    res.status(200).json({email,role,token});
   }
   catch(error)
   {
@@ -17,11 +17,11 @@ const register = async(req,res)=>{
 }
 
 const login = async (req,res)=>{
-  const {email,password} = req.body;
+  const {email,role,password} = req.body;
   try {
-    const user = await User.login(email,password);
+    const user = await User.login(email,password,role);
     const token = createToken(user._id);
-    res.status(200).json({email,token}); 
+    res.status(200).json({email,role,token}); 
   }
   catch(error)
   {
@@ -29,4 +29,30 @@ const login = async (req,res)=>{
   }
 }
 
-module.exports = {register,login};
+const getUserData = async(req,res)=>{
+  const {authorization} = req.headers
+
+  if(!authorization)
+    return res.status(401).json({error:'Authorization token required'})
+    const token = authorization.split(' ')[1]
+
+    if(token==''){
+      return res.status(401).json({error:"Invalid token"})
+    }
+
+    console.log(token)
+    try {
+      const {_id} = jwt.verify(token,process.env.SECRET_KEY)
+      const user = await User.findOne({_id}).select('email role');
+      if(user)
+        return res.status(200).json({email:user.email,role:user.role,token})
+      else
+        return res.status(401).json({error:"Invalid token"})
+    } 
+    catch(error)
+    {
+      res.status(401).json({error:"Request is not authorized"});
+    }
+}
+
+module.exports = {register,login,getUserData};
