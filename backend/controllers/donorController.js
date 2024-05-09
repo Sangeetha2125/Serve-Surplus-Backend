@@ -7,7 +7,7 @@ const addDonation = async (req,res)=>{
     donor.donationHistory = donor.donationHistory.concat(donations);
     const updatedDonor = await donor.save();
     res.status(201).json(updatedDonor);
-  }
+  } 
   catch(error)
   {
     res.status(500).json({error:error.message});
