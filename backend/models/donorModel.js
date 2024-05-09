@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const donationSchema = new Schema({
+  image: String,
   food: String,
   quantity: Number,
   donatedAt: {
@@ -12,6 +13,7 @@ const donationSchema = new Schema({
 })
 
 const donationHistorySchema = new Schema({
+  image: String,
   food: String,
   quantity: Number,
   donatedAt: {

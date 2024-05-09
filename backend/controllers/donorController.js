@@ -16,7 +16,7 @@ const addDonation = async (req,res)=>{
 
 const getDonationHistory = async(req,res)=>{
   const {id} = req.params;
-  const {donationHistory} = await Donors.findOne({_id:id});
+  const {donationHistory} = await Donors.findOne({userId:id});
   res.status(200).json(donationHistory);
 }
 
