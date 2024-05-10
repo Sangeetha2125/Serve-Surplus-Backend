@@ -69,7 +69,7 @@ const getAllNearestDonations = async(req,res) => {
     const donors = await Users.find({role:"Donor"})
     const nearestDonors = [];
     for(var i=0;i<donors.length;i++){
-      let distance = getDistance(parseFloat(donors[i].latitude),parseFloat(donors[i].longitude),parseFloat(receiver.latitude),parseFloat(receiver.longitude));
+      let distance = await getDistance(parseFloat(donors[i].latitude),parseFloat(donors[i].longitude),parseFloat(receiver.latitude),parseFloat(receiver.longitude));
       if(distance<=30){
         nearestDonors.push(donors[i]);
       }
