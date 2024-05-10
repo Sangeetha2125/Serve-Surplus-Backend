@@ -38,6 +38,12 @@ const userSchema = new Schema({
   pincode: {
     type: String,
   },
+  latitude:{
+    type: String,
+  },
+  longitude:{
+    type: String
+  }
 })
 
 userSchema.statics.signUp = async function(email,password,role){
