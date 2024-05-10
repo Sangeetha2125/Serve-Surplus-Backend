@@ -40,6 +40,16 @@ const updateProfile = async (req,res)=>{
   }
 }
 
-module.exports = {createProfile,updateProfile};
+const addLocationCoordinates = async(req,res) => {
+  try {
+    const {latitude,longitude} = req.body
+    const user = await User.findOneAndUpdate({_id:req.user},{latitude,longitude},{new:true})
+    res.status(201).json({message:"Coordinates updated successfully",user});
+  } catch (error) {
+    res.status(500).json({error:error.message});
+  }
+}
+
+module.exports = {createProfile,updateProfile,addLocationCoordinates};
 
 
