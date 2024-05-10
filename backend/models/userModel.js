@@ -19,31 +19,24 @@ const userSchema = new Schema({
   },
   name: {
     type: String,
-    required: true
   },
   phone: {
     type: String,
-    required: true
   },
   doorNumber: {
     type: String,
-    required: true
   },
   street: {
     type: String,
-    required: true
   },
   area: {
     type: String,
-    required: true
   },
   city: {
     type: String,
-    required: true
   },
   pincode: {
     type: String,
-    required: true
   },
 })
 
