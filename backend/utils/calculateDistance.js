@@ -1,4 +1,4 @@
-const  geo = require('node-geo-distance');
+const geo = require("node-geo-distance");
 const getDistance = (donorLatitude,donorLongitude,receiverLatitude,receiverLongitude)=>{
  
   const coord1 = {
@@ -6,7 +6,7 @@ const getDistance = (donorLatitude,donorLongitude,receiverLatitude,receiverLongi
     longitude: donorLongitude
   }
    
-  const coord2 = {
+  let coord2 = {
     latitude: receiverLatitude,
     longitude: receiverLongitude
   }

@@ -1,6 +1,7 @@
 const Donors = require("../models/donorModel");
 const Orders = require("../models/ordersModel");
 const Receivers = require("../models/receiverModel");
+const Users = require("../models/userModel");
 const getDistance = require("../utils/calculateDistance");
 const order = async (req,res)=>{
   const {orders} = req.body;
@@ -65,7 +66,7 @@ const getAllNearestDonations = async(req,res) => {
   try {
     const receiverId = req.user;
     const receiver = await Receivers.findOne({userId:receiverId})
-    const donors = await Donors.find({})
+    const donors = await Users.find({role:"Donor"})
     const nearestDonors = [];
     for(var i=0;i<donors.length;i++){
       let distance = getDistance(donors[i].latitude,donors[i].longitude,receiver.latitude,receiver.longitude);
