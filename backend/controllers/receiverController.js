@@ -73,7 +73,7 @@ const getAllNearestDonations = async(req,res) => {
       if(distance<=30){
         nearestDonors.push(donors[i]);
       }
-      console.log(distance);
+      console.log(distance);  
     }
     res.status(200).json(nearestDonors)
   } catch (error) {
