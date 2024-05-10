@@ -14,10 +14,24 @@ const addDonation = async (req,res)=>{
   }
 }
 
+const getLiveDonations = async(req,res)=>{
+  const {donations} = await Donors.findOne({userId:req.user});
+  res.status(200).json(donations);
+}
+
 const getDonationHistory = async(req,res)=>{
   const {donationHistory} = await Donors.findOne({userId:req.user});
   res.status(200).json(donationHistory);
 }
 
+const getDonorOrders = async(req,res) => {
+  try {
+    const donorOrders = await Orders.find({donor_id:req.user})
+    res.status(200).json(donorOrders)
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+}
 
-module.exports = {addDonation,getDonationHistory};
+
+module.exports = {addDonation,getDonationHistory,getLiveDonations,getDonorOrders};

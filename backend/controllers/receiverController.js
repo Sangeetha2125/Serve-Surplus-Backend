@@ -51,4 +51,13 @@ const order = async (req,res)=>{
   }
 }
 
-module.exports = {order}; 
+const getReceiverOrders = async(req,res) => {
+  try {
+    const receiverOrders = (await Orders.find({receiver_id:req.user}))
+    res.status(200).json(receiverOrders)
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+}
+
+module.exports = {order,getReceiverOrders}; 
