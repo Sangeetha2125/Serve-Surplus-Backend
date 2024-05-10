@@ -64,13 +64,15 @@ const getReceiverOrders = async(req,res) => {
 const getAllNearestDonations = async(req,res) => {
   try {
     const receiverId = req.user;
+    const receiver = await Receivers.findOne({userId:receiverId})
     const donors = await Donors.find({})
     const nearestDonors = [];
     for(var i=0;i<donors.length;i++){
-      let distance = getDistance(donors[i].latitude,donors[i].longitude,receiverId.latitude,receiverId.longitude);
+      let distance = getDistance(donors[i].latitude,donors[i].longitude,receiver.latitude,receiver.longitude);
       if(distance<=30){
         nearestDonors.push(donors[i]);
       }
+      console.log(distance);
     }
     res.status(200).json(nearestDonors)
   } catch (error) {
