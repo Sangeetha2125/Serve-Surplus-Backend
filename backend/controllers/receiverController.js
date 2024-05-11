@@ -107,7 +107,7 @@ const getReceiverOrders = async (req, res) => {
     res.status(200).json(receiverOrders);
   } catch (error) {
     res.status(500).json(error.message);
-  }
+  } 
 };
 
 module.exports = { order, getReceiverOrders, getAllNearestDonations, getDonorDetails };
