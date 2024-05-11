@@ -24,7 +24,7 @@ const login = async (req,res)=>{
     if(user.name && user.name!=''){
       res.status(200).json({user:{email,role,token},profileCreated:true}); 
     }
-    res.status(200).json({email,role,token}); 
+    res.status(200).json({user:{email,role,token},profileCreated:false}); 
   }
   catch(error)
   {
