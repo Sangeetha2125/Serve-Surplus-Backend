@@ -57,7 +57,7 @@ const order = async (req, res) => {
   const { orders } = req.body;
   try {
     const { id } = req.params;
-    const donor = await Donors.findOne({ _id: id });
+    const donor = await Donors.findOne({ userId: id });
     const receiver = await Receivers.findOne({ userId: req.user._id });
     orders.forEach((order) => {
       let flag = false;
