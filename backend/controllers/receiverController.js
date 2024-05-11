@@ -2,7 +2,6 @@ const Donors = require("../models/donorModel");
 const Orders = require("../models/ordersModel");
 const Receivers = require("../models/receiverModel");
 const Users = require("../models/userModel");
-const getDistance = require("../utils/calculateDistance");
 const order = async (req,res)=>{
   const {orders} = req.body;
   try {
@@ -62,29 +61,44 @@ const getReceiverOrders = async(req,res) => {
   }
 }
 
+const haversineDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371; // Radius of the Earth in kilometers
+  const dLat = (lat2 - lat1) * Math.PI / 180; // Convert degrees to radians
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in kilometers
+  return distance;
+};
+
 const getAllNearestDonations = async (req, res) => {
   try {
     const receiverId = req.user;
     const receiver = await Receivers.findOne({ userId: receiverId });
-    
-    const nearestDonors = await Users.find({
-      role: "Donor",
-      location: {
-        $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [parseFloat(receiver.longitude), parseFloat(receiver.latitude)]
-          },
-          $maxDistance: 30000
-        }
+    const donors = await Users.find({ role: "Donor" });
+
+    const nearestDonors = [];
+    for (let i = 0; i < donors.length; i++) {
+      const distance = haversineDistance(
+        receiver.latitude,
+        receiver.longitude,
+        donors[i].latitude,
+        donors[i].longitude
+      );
+      if (distance <= 30) {
+        nearestDonors.push(donors[i]);
       }
-    });
+      console.log(distance);
+    }
 
     res.status(200).json(nearestDonors);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error.message });
   }
 };
+
 
 module.exports = {order,getReceiverOrders,getAllNearestDonations}; 
