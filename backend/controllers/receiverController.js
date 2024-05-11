@@ -62,23 +62,29 @@ const getReceiverOrders = async(req,res) => {
   }
 }
 
-const getAllNearestDonations = async(req,res) => {
+const getAllNearestDonations = async (req, res) => {
   try {
     const receiverId = req.user;
-    const receiver = await Receivers.findOne({userId:receiverId})
-    const donors = await Users.find({role:"Donor"})
-    const nearestDonors = [];
-    for(var i=0;i<donors.length;i++){
-      let distance = parseInt(getDistance(parseFloat(donors[i].latitude),parseFloat(donors[i].longitude),parseFloat(receiver.latitude),parseFloat(receiver.longitude)));
-      if(distance<=30){
-        nearestDonors.push(donors[i]);
+    const receiver = await Receivers.findOne({ userId: receiverId });
+    
+    const nearestDonors = await Users.find({
+      role: "Donor",
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [parseFloat(receiver.longitude), parseFloat(receiver.latitude)]
+          },
+          $maxDistance: 30000
+        }
       }
-      console.log(distance);  
-    }
-    res.status(200).json(nearestDonors)
+    });
+
+    res.status(200).json(nearestDonors);
   } catch (error) {
-    res.status(500).json(error.message)
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 module.exports = {order,getReceiverOrders,getAllNearestDonations}; 
