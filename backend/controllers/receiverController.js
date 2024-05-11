@@ -38,7 +38,7 @@ const getAllNearestDonations = async (req, res) => {
 };
 
 const getDonorDetails = async(req,res) => {
-  const {donorId} = req.body
+  const {donorId} = req.query
   try {
     if(!donorId || donorId===''){
       return res.status(400).json("Donor id is required to access this route")
