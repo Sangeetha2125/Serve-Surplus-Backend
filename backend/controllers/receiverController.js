@@ -84,7 +84,7 @@ const getAllNearestDonations = async (req, res) => {
 
       if (distance <= 30000) {
         const donations = await Donors.findOne({userId:donors[i]._id})
-        let donationInfo = {donor: donors[i]._id,donations: donations.donations}
+        let donationInfo = {donor: donors[i]._id,distance: Math.round(distance/1000),donations: donations.donations}
         nearestDonations = nearestDonations.concat(donationInfo)
       }
     }
