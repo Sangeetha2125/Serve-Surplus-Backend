@@ -22,7 +22,7 @@ const login = async (req,res)=>{
     const user = await User.login(email,password,role);
     const token = createToken(user._id);
     if(user.name && user.name!=''){
-      res.status(200).json({user:{email,role,token},profileCreated:true}); 
+      return res.status(200).json({user:{email,role,token},profileCreated:true}); 
     }
     res.status(200).json({user:{email,role,token},profileCreated:false}); 
   }
