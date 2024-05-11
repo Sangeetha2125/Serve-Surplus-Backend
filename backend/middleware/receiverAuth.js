@@ -1,6 +1,7 @@
 const receiverAuth = (req,res,next)=>{
   try {
     if(req.role!=="Receiver"){
+      
       throw Error("Donor cannot access");
     }
     next()

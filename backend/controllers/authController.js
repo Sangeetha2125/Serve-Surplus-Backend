@@ -43,7 +43,6 @@ const getUserData = async(req,res)=>{
       return res.status(401).json({error:"Invalid token"})
     }
 
-    console.log(token)
     try {
       const {_id} = jwt.verify(token,process.env.SECRET_KEY)
       const user = await User.findOne({_id}).select('email role');
