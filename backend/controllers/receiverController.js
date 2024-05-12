@@ -60,7 +60,6 @@ const order = async (req, res) => {
     const { id } = req.params;
     const user = await Users.findOne({_id:req.user});
     const donor = await Donors.findOne({ userId: id });
-    console.log(user);
     const receiver = await Receivers.findOne({ userId: req.user });
       let flag = false;
       donor.donations.forEach((item) => {
@@ -92,7 +91,14 @@ const order = async (req, res) => {
   }
 
     const otp = generateNumericOTP(6);
-    const message = `Your order for ${order.food} - ${order.quantity} is accepted and the otp is ${otp}\n`
+    const message = `<h1 style="color: #000000; margin-bottom: 20px;">Your Order Confirmation</h1>
+    <p style="color: #111111; line-height: 1.6;">Hello ${user.name},</p>
+    <p style="color: #111111; line-height: 1.6;">We are pleased to confirm that your order for <strong>${order.food}</strong> (Quantity: ${order.quantity}) has been accepted.</p>
+    <p style="color: #111111; line-height: 1.6;">Please make a note of the following OTP: <strong>${otp}</strong>. This OTP is required for you to confirm your identity when receiving the donation from our generous donor.</p>
+    <p style="color: #111111; line-height: 1.6;">We kindly remind you to treat the donor's contribution with utmost respect and gratitude.</p>
+    <p style="color: #111111; line-height: 1.6;">If you have any questions or need assistance, feel free to reach out to us. We're here to help!</p>
+    <p style="color: #222222; line-height: 1.6;">Thank you for choosing Serve Surplus. Your support makes a real difference!</p>
+    <p style="color: #222222; line-height: 1.6; margin-top: 20px;">With Regards,<br>The Serve Surplus Team</p>`
 
     sendEmail(message,user.email);
     const updatedDonation = await donor.save();

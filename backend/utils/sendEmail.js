@@ -15,7 +15,7 @@ const sendEmail = async (message,receiver)=>{
     from: 'receiverftn@gmail.com',
     to: receiver,
     subject: `Message From Serve Surplus`,
-    text:message,
+    html:message,
   };
   
   await new Promise((resolve, reject) => {
