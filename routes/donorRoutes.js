@@ -12,6 +12,6 @@ router.get("/history",getDonationHistory);
 router.get("/",getLiveDonations)
 router.get("/receiver-info",getReceiverDetails)
 router.get("/orders",getDonorOrders)
-router.post("/confirm-order",confirmOrder)
+router.get("/confirm-order/:id",confirmOrder)
 
 module.exports = router;           

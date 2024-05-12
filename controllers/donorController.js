@@ -111,20 +111,15 @@ const getDonorOrders = async (req, res) => {
 
 const confirmOrder = async(req,res) => {
   try {
-    const {receiverId, orderId, secret} = req.body
-    if(!receiverId || !orderId || !secret){
-      return res.status(400).json({message:"Receiver ID, Order ID, Secret are required"})
-    } 
-    const order = await Orders.findOne({donor_id:req.user,receiver_id:receiverId, orders:{$elemMatch:{_id:orderId}}})
-    if(order){
-      const secretFound = order.orders.secret
-      if(secretFound && secret==secretFound){
-        order.orders.status = "Delivered"
-        await order.save();
-        return res.status(200).json({message:"Order confirmed successfully"})
+    const {id} = req.params
+    const {donorId,receiverId} = req.query
+    const orders = await Orders.find({donor_id:donorId, receiver_id:receiverId})
+    orders.orders.forEach((order)=>{
+      if(orderId===order._id){
+        order.status = "Delivered";
       }
-    }
-    res.status(404).json({message:"Invalid Secret"})
+    })
+    await orders.save();
   } catch (error) {
     res.status(500).json(error.message);
   }

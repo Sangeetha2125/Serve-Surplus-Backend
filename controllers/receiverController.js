@@ -72,7 +72,6 @@ const order = async (req, res) => {
       let flag = false;
       donor.donations.forEach((item) => {
         if (item.food === order.food && item._id == order.donationId) {
-          console.log("heel")
           if (!flag) {
             if (item.quantity - order.quantity < 0)
               throw Error("Reduce the quantity");
