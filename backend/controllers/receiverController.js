@@ -104,11 +104,16 @@ const order = async (req, res) => {
 const getReceiverOrders = async (req, res) => {
   try {
     const {status} = req.query
+    const receiver = await Receivers.findOne({userId:req.user})
+    if(!receiver){
+      return res.status(400).json({message:"Unauthorized to access this route"})
+    }
+    console.log(status)
     if(status){
-      const receiverOrders = await Orders.find({ receiver_id: req.user, orders: {$eleMatch: {status: status}}});
+      const receiverOrders = await Orders.find({ receiver_id: receiver._id, orders: {$elemMatch: {status: status}}});
       return res.status(200).json(receiverOrders);
     }
-    const receiverOrders = await Orders.find({ receiver_id: req.user });
+    const receiverOrders = await Orders.find({ receiver_id: receiver._id });
     res.status(200).json(receiverOrders);
   } catch (error) {
     res.status(500).json(error.message);

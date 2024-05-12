@@ -33,11 +33,27 @@ const getDonationHistory = async(req,res)=>{
   }
 }
 
+const getReceiverDetails = async(req,res) => {
+  const {receiverId} = req.query
+  try {
+    if(!receiverId || receiverId===''){
+      return res.status(400).json("Receiver id is required to access this route")
+    }
+    const receiver = await Users.findOne({_id:receiverId}).select('-password -latitude -longitude');
+    if(!receiver){
+      return res.status(404).json(`No receiver exists with id:${receiverId}`)
+    }
+    res.status(200).json(receiver)
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+}
+
 const getDonorOrders = async (req, res) => {
   try {
     const {status} = req.query
     if(status){
-      const donorOrders = await Orders.find({ donor_id: req.user, orders: {$eleMatch: {status: status}}});
+      const donorOrders = await Orders.find({ donor_id: req.user, orders: {$elemMatch: {status: status}}});
       return res.status(200).json(donorOrders);
     }
     const donorOrders = await Orders.find({donor_id:req.user})
@@ -53,9 +69,14 @@ const confirmOrder = async(req,res) => {
     if(!receiverId || !orderId || !secret){
       return res.status(400).json({message:"Receiver ID, Order ID, Secret are required"})
     } 
-    const secretFound = await Orders.findOne({donor_id:req.user,receiver_id:receiverId, orders:{$eleMatch:{_id:orderId}}}).select("orders.order.secret")
-    if(secretFound && secret==secretFound){
-      return res.status(200).json({message:"Order confirmed successfully"})
+    const order = await Orders.findOne({donor_id:req.user,receiver_id:receiverId, orders:{$elemMatch:{_id:orderId}}})
+    if(order){
+      const secretFound = order.orders.secret
+      if(secretFound && secret==secretFound){
+        order.orders.status = "Delivered"
+        await order.save();
+        return res.status(200).json({message:"Order confirmed successfully"})
+      }
     }
     res.status(404).json({message:"Invalid Secret"})
   } catch (error) {
@@ -64,4 +85,4 @@ const confirmOrder = async(req,res) => {
 }
 
 
-module.exports = {addDonation,getDonationHistory,getLiveDonations,getDonorOrders, confirmOrder};
+module.exports = {addDonation,getDonationHistory,getLiveDonations,getDonorOrders, confirmOrder, getReceiverDetails};

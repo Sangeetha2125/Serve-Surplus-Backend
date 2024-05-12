@@ -4,6 +4,7 @@ const requireAuth = require("../middleware/requireAuth")
 const receiverAuth = require("../middleware/receiverAuth")
 
 const router = express.Router();
+
 router.use(requireAuth)
 router.use(receiverAuth)
 router.get("/",getAllNearestDonations);
