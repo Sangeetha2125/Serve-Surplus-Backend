@@ -52,9 +52,29 @@ const getReceiverDetails = async(req,res) => {
 const getDonorOrders = async (req, res) => {
   try {
     const {status} = req.query
-    if(status){
-      const donorOrders = await Orders.find({ donor_id: req.user, orders: {$elemMatch: {status: status}}});
-      return res.status(200).json(donorOrders);
+    const donor = await Donors.find({userId:req.user})
+    if(!donor){
+      return res.status(400).json({message:"Unauthorized to access this route"})
+    }
+    if(status!=null){
+      const donorOrders = await Orders.find({ donor_id:donor._id});
+      let resultOrders = []
+      donorOrders.forEach(donorOrder=>{
+        let statusOrders = []
+        donorOrder.orders.forEach(order=>{
+          if(order.status===status){
+            statusOrders.push(order)
+          }
+        })
+        let donOrder = {
+          _id: donorOrder._id,
+          donor_id:donorOrder.donor_id,
+          donor_id:donorOrder.donor_id,
+          orders:statusOrders
+        }
+        resultOrders.push(donOrder)
+      })
+      return res.status(200).json(resultOrders);
     }
     const donorOrders = await Orders.find({donor_id:req.user})
     res.status(200).json(donorOrders);
