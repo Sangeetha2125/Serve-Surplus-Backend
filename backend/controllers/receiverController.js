@@ -133,23 +133,25 @@ const getReceiverOrders = async (req, res) => {
     }
     if(status!=null){
       const receiverOrders = await Orders.find({ receiver_id:receiver._id});
-      let resultOrders = []
+      let statusOrders = []
       receiverOrders.forEach(receiverOrder=>{
-        let statusOrders = []
         receiverOrder.orders.forEach(order=>{
           if(order.status===status){
-            statusOrders.push(order)
+            let recOrder = {
+              donor_id:receiverOrder.donor_id,
+              receiver_id:receiverOrder.receiver_id,
+              food: order.food,
+              image: order.image,
+              quantity: order.quantity,
+              date: order.date,
+              id: order.id,
+              status: order.status,
+            }
+            statusOrders.push(recOrder)
           }
         })
-        let recOrder = {
-          _id: receiverOrder._id,
-          donor_id:receiverOrder.donor_id,
-          receiver_id:receiverOrder.receiver_id,
-          orders:statusOrders
-        }
-        resultOrders.push(recOrder)
       })
-      return res.status(200).json(resultOrders);
+      return res.status(200).json(statusOrders);
     }
     const receiverOrders = await Orders.find({ receiver_id: receiver._id });
     res.status(200).json(receiverOrders);

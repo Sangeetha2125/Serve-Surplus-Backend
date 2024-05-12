@@ -19,12 +19,12 @@ const register = async(req,res)=>{
 const login = async (req,res)=>{
   const {email,role,password} = req.body;
   try {
-    const user = await User.login(email,password,role);
+    const user = await User.login(email,password);
     const token = createToken(user._id);
     if(user.name && user.name!=''){
-      return res.status(200).json({user:{email,role,token},profileCreated:true}); 
+      return res.status(200).json({user:{email,token},profileCreated:true}); 
     }
-    res.status(200).json({user:{email,role,token},profileCreated:false}); 
+    res.status(200).json({user:{email,token},profileCreated:false}); 
   }
   catch(error)
   {
