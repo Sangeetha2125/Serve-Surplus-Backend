@@ -54,7 +54,7 @@ const getDonorDetails = async(req,res) => {
 }
 
 const order = async (req, res) => {
-  const { order } = req.body;
+  const order = req.body
   try {
     const { id } = req.params;
     const donor = await Donors.findOne({ userId: id });
