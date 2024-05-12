@@ -16,11 +16,6 @@ const donationHistorySchema = new Schema({
   image: String,
   food: String,
   quantity: Number,
-  status: {
-    type: String,
-    enum: ["Pending","Processing","Delivered"],
-    default: "Pending"
-  },
   donatedAt: {
     type: Date,
     default: new Date()
