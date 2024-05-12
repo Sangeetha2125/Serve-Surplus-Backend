@@ -3,6 +3,7 @@ const Orders = require("../models/ordersModel");
 const Receivers = require("../models/receiverModel");
 const Users = require("../models/userModel");
 const  geo = require('node-geo-distance');
+const sendEmail = require("../utils/sendEmail");
 
 const getAllNearestDonations = async (req, res) => {
   try {
@@ -56,6 +57,7 @@ const getDonorDetails = async(req,res) => {
 const order = async (req, res) => {
   const order = req.body
   try {
+    sendEmail();
     const { id } = req.params;
     const donor = await Donors.findOne({ userId: id });
     const receiver = await Receivers.findOne({ userId: req.user });
