@@ -55,15 +55,15 @@ const getDonorDetails = async(req,res) => {
 }
 
 const order = async (req, res) => {
-  const {order} = req.body
+  const order = req.body
   try {
     const { id } = req.params;
+    const user = await Users.findOne({_id:req.user});
     const donor = await Donors.findOne({ userId: id });
+    console.log(user);
     const receiver = await Receivers.findOne({ userId: req.user });
       let flag = false;
       donor.donations.forEach((item) => {
-        console.log(item.food)
-        console.log(order.food)
         if (item.food === order.food && item._id == order.donationId) {
           console.log("heel")
           if (!flag) {
@@ -79,7 +79,6 @@ const order = async (req, res) => {
       if (!flag) {
         throw Error("Food not available");
       }
-    const message = `hello`;
     function generateNumericOTP(length) {
       const digits = '0123456789';
       let otp = '';
@@ -91,9 +90,11 @@ const order = async (req, res) => {
   
       return otp;
   }
+
     const otp = generateNumericOTP(6);
-    console.log(otp)
-    sendEmail(message);
+    const message = `Your order for ${order.food} - ${order.quantity} is accepted and the otp is ${otp}\n`
+
+    sendEmail(message,user.email);
     const updatedDonation = await donor.save();
 
     const existingOrder = await Orders.findOne({
