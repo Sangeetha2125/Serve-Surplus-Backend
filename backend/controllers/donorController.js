@@ -1,4 +1,5 @@
 const Donors = require("../models/donorModel");
+const Orders = require("../models/ordersModel");
 const addDonation = async (req,res)=>{
   try {
     const donor = await Donors.findOne({userId:req.user});
@@ -15,23 +16,93 @@ const addDonation = async (req,res)=>{
 }
 
 const getLiveDonations = async(req,res)=>{
-  const {donations} = await Donors.findOne({userId:req.user});
-  res.status(200).json(donations);
+  try {
+    const {donations} = await Donors.findOne({userId:req.user});
+    res.status(200).json(donations);
+  } catch (error) {
+    res.status(500).json({error:error.message});
+  }
 }
 
 const getDonationHistory = async(req,res)=>{
-  const {donationHistory} = await Donors.findOne({userId:req.user});
-  res.status(200).json(donationHistory);
+  try {
+    const {donationHistory} = await Donors.findOne({userId:req.user});
+    res.status(200).json(donationHistory);
+  } catch (error) {
+    res.status(500).json({error:error.message});
+  }
 }
 
-const getDonorOrders = async(req,res) => {
+const getReceiverDetails = async(req,res) => {
+  const {receiverId} = req.query
   try {
-    const donorOrders = await Orders.find({donor_id:req.user})
-    res.status(200).json(donorOrders)
+    if(!receiverId || receiverId===''){
+      return res.status(400).json("Receiver id is required to access this route")
+    }
+    const receiver = await Users.findOne({_id:receiverId}).select('-password -latitude -longitude');
+    if(!receiver){
+      return res.status(404).json(`No receiver exists with id:${receiverId}`)
+    }
+    res.status(200).json(receiver)
   } catch (error) {
-    res.status(500).json(error.message)
+    res.status(500).json(error.message);
+  }
+}
+
+const getDonorOrders = async (req, res) => {
+  try {
+    const {status} = req.query
+    const donor = await Donors.find({userId:req.user})
+    if(!donor){
+      return res.status(400).json({message:"Unauthorized to access this route"})
+    }
+    if(status!=null){
+      const donorOrders = await Orders.find({ donor_id:donor._id});
+      let resultOrders = []
+      donorOrders.forEach(donorOrder=>{
+        let statusOrders = []
+        donorOrder.orders.forEach(order=>{
+          if(order.status===status){
+            statusOrders.push(order)
+          }
+        })
+        let donOrder = {
+          _id: donorOrder._id,
+          donor_id:donorOrder.donor_id,
+          donor_id:donorOrder.donor_id,
+          orders:statusOrders
+        }
+        resultOrders.push(donOrder)
+      })
+      return res.status(200).json(resultOrders);
+    }
+    const donorOrders = await Orders.find({donor_id:req.user})
+    res.status(200).json(donorOrders);
+  } catch (error) {
+    res.status(500).json(error.message);
+  } 
+};
+
+const confirmOrder = async(req,res) => {
+  try {
+    const {receiverId, orderId, secret} = req.body
+    if(!receiverId || !orderId || !secret){
+      return res.status(400).json({message:"Receiver ID, Order ID, Secret are required"})
+    } 
+    const order = await Orders.findOne({donor_id:req.user,receiver_id:receiverId, orders:{$elemMatch:{_id:orderId}}})
+    if(order){
+      const secretFound = order.orders.secret
+      if(secretFound && secret==secretFound){
+        order.orders.status = "Delivered"
+        await order.save();
+        return res.status(200).json({message:"Order confirmed successfully"})
+      }
+    }
+    res.status(404).json({message:"Invalid Secret"})
+  } catch (error) {
+    res.status(500).json(error.message);
   }
 }
 
 
-module.exports = {addDonation,getDonationHistory,getLiveDonations,getDonorOrders};
+module.exports = {addDonation,getDonationHistory,getLiveDonations,getDonorOrders, confirmOrder, getReceiverDetails};

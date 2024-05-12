@@ -119,11 +119,37 @@ const order = async (req, res) => {
 
 const getReceiverOrders = async (req, res) => {
   try {
-    const receiverOrders = await Orders.find({ receiver_id: req.user });
+    const {status} = req.query
+    const receiver = await Receivers.findOne({userId:req.user})
+    if(!receiver){
+      return res.status(400).json({message:"Unauthorized to access this route"})
+    }
+    if(status!=null){
+      const receiverOrders = await Orders.find({ receiver_id:receiver._id});
+      let resultOrders = []
+      receiverOrders.forEach(receiverOrder=>{
+        let statusOrders = []
+        receiverOrder.orders.forEach(order=>{
+          if(order.status===status){
+            statusOrders.push(order)
+          }
+        })
+        let recOrder = {
+          _id: receiverOrder._id,
+          donor_id:receiverOrder.donor_id,
+          receiver_id:receiverOrder.receiver_id,
+          orders:statusOrders
+        }
+        resultOrders.push(recOrder)
+      })
+      return res.status(200).json(resultOrders);
+    }
+    const receiverOrders = await Orders.find({ receiver_id: receiver._id });
     res.status(200).json(receiverOrders);
   } catch (error) {
     res.status(500).json(error.message);
   } 
 };
 
-module.exports = { order, getReceiverOrders, getAllNearestDonations, getDonorDetails };
+
+module.exports = { order, getReceiverOrders, getAllNearestDonations, getDonorDetails};
