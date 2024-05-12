@@ -126,7 +126,7 @@ const confirmOrder = async(req,res) => {
     }
     res.status(400).json({message:"Invalid secret provided"})
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({message: error.message});
   }
 }
 
