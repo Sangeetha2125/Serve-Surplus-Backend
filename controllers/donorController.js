@@ -77,7 +77,6 @@ const getDonorOrders = async (req, res) => {
               date: order.date,
               id: order.id,
               status: order.status,
-              secret: order.secret,
             }
             statusOrders.push(donOrder)
           }
@@ -98,7 +97,6 @@ const getDonorOrders = async (req, res) => {
           date: order.date,
           id: order.id,
           status: order.status,
-          secret:order.secret,
         }
         allOrders.push(donOrder)
       })
@@ -111,15 +109,22 @@ const getDonorOrders = async (req, res) => {
 
 const confirmOrder = async(req,res) => {
   try {
-    const {id} = req.params
-    const {donorId,receiverId} = req.query
+    const {orderId, donorId, receiverId, secret} = req.body
     const orders = await Orders.find({donor_id:donorId, receiver_id:receiverId})
+    let isValidSecret = false
     orders.orders.forEach((order)=>{
       if(orderId===order._id){
-        order.status = "Delivered";
+        if(order.secret==secret){
+          order.status="Delivered";
+          isValidSecret = true;
+        }
       }
     })
-    await orders.save();
+    if(isValidSecret){
+      await orders.save();
+      return res.status(200).json({message:"Order confirmed successfully"})
+    }
+    res.status(400).json({message:"Invalid secret provided"})
   } catch (error) {
     res.status(500).json(error.message);
   }
