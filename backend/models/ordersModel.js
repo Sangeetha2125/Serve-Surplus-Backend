@@ -9,7 +9,7 @@ const orderDetailsSchema = new Schema({
   secret: String,
   status: {
     type: String,
-    enum: ["Processing", "Delivered"],
+    enum: ['Delivered', 'Processing'],
     default: "Processing"
   },
   date: {
