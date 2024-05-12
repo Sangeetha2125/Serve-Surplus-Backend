@@ -85,14 +85,14 @@ const order = async (req, res) => {
       receiver_id: receiver._id,
     });
     if (existingOrder) {
-      existingOrder.orders = existingOrder.orders.concat([order]);
+      existingOrder.orders = existingOrder.orders.concat([{_id:order.donationId,food:order.food,quantity:order.quantity,image:order.image,donatedAt:order.donatedAt}]);
       const updatedOrder = await existingOrder.save();
       res.status(201).json(updatedOrder);
     } else {
       const newOrder = await Orders.create({
         donor_id: donor._id,
         receiver_id: receiver._id,
-        order:[{_id:order.donationId,food:order.food,quantity:order.quantity,image:order.image,donatedAt:order.donatedAt}],
+        orders:[{_id:order.donationId,food:order.food,quantity:order.quantity,image:order.image,donatedAt:order.donatedAt}],
       });
       res.status(200).json(newOrder);
     }
