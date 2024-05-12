@@ -65,11 +65,9 @@ userSchema.statics.signUp = async function(email,password,role){
   return user;
 }
 
-userSchema.statics.login = async function(email,password,role){
+userSchema.statics.login = async function(email,password){
   if(!email || !password)
     throw Error("All fields must be filled")
-  else if(role.toUpperCase()!=="DONOR" && role.toUpperCase()!=="RECEIVER")
-    throw Error("Choose correct role");
   const user = await this.findOne({email});
   if(!user)
     throw Error("Incorrect Email");
