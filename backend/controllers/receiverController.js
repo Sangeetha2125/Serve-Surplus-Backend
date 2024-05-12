@@ -55,17 +55,17 @@ const getDonorDetails = async(req,res) => {
 }
 
 const order = async (req, res) => {
-  const order = req.body
+  const {order} = req.body
   try {
-    sendEmail();
     const { id } = req.params;
     const donor = await Donors.findOne({ userId: id });
     const receiver = await Receivers.findOne({ userId: req.user });
-    console.log("donor",donor);
-    console.log("receiver",receiver)
       let flag = false;
       donor.donations.forEach((item) => {
+        console.log(item.food)
+        console.log(order.food)
         if (item.food === order.food && item._id == order.donationId) {
+          console.log("heel")
           if (!flag) {
             if (item.quantity - order.quantity < 0)
               throw Error("Reduce the quantity");
@@ -79,7 +79,21 @@ const order = async (req, res) => {
       if (!flag) {
         throw Error("Food not available");
       }
-
+    const message = `hello`;
+    function generateNumericOTP(length) {
+      const digits = '0123456789';
+      let otp = '';
+  
+      for (let i = 0; i < length; i++) {
+          const randomIndex = Math.floor(Math.random() * digits.length);
+          otp += digits[randomIndex];
+      }
+  
+      return otp;
+  }
+    const otp = generateNumericOTP(6);
+    console.log(otp)
+    sendEmail(message);
     const updatedDonation = await donor.save();
 
     const existingOrder = await Orders.findOne({
@@ -87,14 +101,14 @@ const order = async (req, res) => {
       receiver_id: receiver._id,
     });
     if (existingOrder) {
-      existingOrder.orders = existingOrder.orders.concat([{_id:order.donationId,food:order.food,quantity:order.quantity,image:order.image,donatedAt:order.donatedAt}]);
+      existingOrder.orders = existingOrder.orders.concat([{_id:order.donationId,food:order.food,quantity:order.quantity,image:order.image,donatedAt:order.donatedAt,secret:otp}]);
       const updatedOrder = await existingOrder.save();
       res.status(201).json(updatedOrder);
     } else {
       const newOrder = await Orders.create({
         donor_id: donor._id,
         receiver_id: receiver._id,
-        orders:[{_id:order.donationId,food:order.food,quantity:order.quantity,image:order.image,donatedAt:order.donatedAt}],
+        orders:[{_id:order.donationId,food:order.food,quantity:order.quantity,image:order.image,donatedAt:order.donatedAt,secret:otp}],
       });
       res.status(200).json(newOrder);
     }

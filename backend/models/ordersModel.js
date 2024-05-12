@@ -6,6 +6,12 @@ const orderDetailsSchema = new Schema({
   image: String,
   food: String,
   quantity: Number,
+  secret: String,
+  orderStatus: {
+    type: String,
+    enum: ['Delivered', 'Processing'],
+    default: "Processing"
+  },
   date: {
     type: Date,
     default: new Date()
