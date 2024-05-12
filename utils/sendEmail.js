@@ -5,7 +5,7 @@ const sendEmail = async (message,receiver)=>{
     port: 465,
     host: "smtp.gmail.com",
     auth: {
-      user: 'receiverftn@gmail.com',
+      user: 'servesurplus@gmail.com',
       pass: process.env.EMAIL_PASSWORD,
     },
     secure: true,
