@@ -7,15 +7,9 @@ const orderDetailsSchema = new Schema({
   food: String,
   quantity: Number,
   secret: String,
-  orderStatus: {
-    type: String,
-    enum: ['Delivered', 'Processing'],
-    default: "Processing"
-  },
-  secret: String,
   status: {
     type: String,
-    enum: ["Processing", "Delivered"],
+    enum: ['Delivered', 'Processing'],
     default: "Processing"
   },
   date: {
