@@ -24,14 +24,19 @@ const getDonationHistory = async(req,res)=>{
   res.status(200).json(donationHistory);
 }
 
-const getDonorOrders = async(req,res) => {
+const getDonorOrders = async (req, res) => {
   try {
+    const {status} = req.query
+    if(status){
+      const donorOrders = await Orders.find({ donor_id: req.user, orders: {$eleMatch: {status: status}}});
+      return res.status(200).json(donorOrders);
+    }
     const donorOrders = await Orders.find({donor_id:req.user})
-    res.status(200).json(donorOrders)
+    res.status(200).json(donorOrders);
   } catch (error) {
-    res.status(500).json(error.message)
-  }
-}
+    res.status(500).json(error.message);
+  } 
+};
 
 
 module.exports = {addDonation,getDonationHistory,getLiveDonations,getDonorOrders};

@@ -103,6 +103,11 @@ const order = async (req, res) => {
 
 const getReceiverOrders = async (req, res) => {
   try {
+    const {status} = req.query
+    if(status){
+      const receiverOrders = await Orders.find({ receiver_id: req.user, orders: {$eleMatch: {status: status}}});
+      return res.status(200).json(receiverOrders);
+    }
     const receiverOrders = await Orders.find({ receiver_id: req.user });
     res.status(200).json(receiverOrders);
   } catch (error) {
