@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const orderDetailsSchema = new Schema({
+  image: String,
   food: String,
   quantity: Number,
   date: {

@@ -63,7 +63,7 @@ const order = async (req, res) => {
     console.log("receiver",receiver)
       let flag = false;
       donor.donations.forEach((item) => {
-        if (item.food === order.food && item._id == order._id) {
+        if (item.food === order.food && item._id == order.donationId) {
           if (!flag) {
             if (item.quantity - order.quantity < 0)
               throw Error("Reduce the quantity");
@@ -92,7 +92,7 @@ const order = async (req, res) => {
       const newOrder = await Orders.create({
         donor_id: donor._id,
         receiver_id: receiver._id,
-        order:[order],
+        order:[{_id:order.donationId,food:order.food,quantity:order.quantity,image:order.image,donatedAt:order.donatedAt}],
       });
       res.status(200).json(newOrder);
     }
