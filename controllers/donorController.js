@@ -57,8 +57,7 @@ const getDonorOrders = async (req, res) => {
       return res.status(400).json({message:"Unauthorized to access this route"})
     }
     if(status!=null){
-      const donorOrders = await Orders.find({});
-      console.log(donorOrders)
+      const donorOrders = await Orders.find({ donor_id:donor._id});
       let statusOrders = []
       donorOrders.forEach(donorOrder=>{
         donorOrder.orders.forEach(order=>{
@@ -80,7 +79,23 @@ const getDonorOrders = async (req, res) => {
       return res.status(200).json(statusOrders);
     }
     const donorOrders = await Orders.find({})
-    res.status(200).json(donorOrders);
+    let allOrders = []
+    donorOrders.forEach(donorOrder=>{
+      donorOrder.orders.forEach(order=>{
+        let donOrder = {
+          donor_id:donorOrder.donor_id,
+          receiver_id:donorOrder.receiver_id,
+          food: order.food,
+          image: order.image,
+          quantity: order.quantity,
+          date: order.date,
+          id: order.id,
+          status: order.status,
+        }
+        allOrders.push(donOrder)
+      })
+    })
+    res.status(200).json(allOrders);
   } catch (error) {
     res.status(500).json(error.message);
   } 

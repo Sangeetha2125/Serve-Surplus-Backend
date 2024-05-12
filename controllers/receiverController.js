@@ -154,7 +154,23 @@ const getReceiverOrders = async (req, res) => {
       return res.status(200).json(statusOrders);
     }
     const receiverOrders = await Orders.find({ receiver_id: receiver._id });
-    res.status(200).json(receiverOrders);
+    let allOrders = []
+    receiverOrders.forEach(receiverOrder=>{
+      receiverOrder.orders.forEach(order=>{
+        let recOrder = {
+          donor_id:receiverOrder.donor_id,
+          receiver_id:receiverOrder.receiver_id,
+          food: order.food,
+          image: order.image,
+          quantity: order.quantity,
+          date: order.date,
+          id: order.id,
+          status: order.status,
+        }
+        allOrders.push(recOrder)
+      })
+    })
+    res.status(200).json(allOrders);
   } catch (error) {
     res.status(500).json(error.message);
   } 
