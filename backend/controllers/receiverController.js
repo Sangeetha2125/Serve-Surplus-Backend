@@ -55,7 +55,7 @@ const getDonorDetails = async(req,res) => {
 }
 
 const order = async (req, res) => {
-  const { order } = req.body;
+  const order = req.body
   try {
     sendEmail();
     const { id } = req.params;
@@ -65,7 +65,7 @@ const order = async (req, res) => {
     console.log("receiver",receiver)
       let flag = false;
       donor.donations.forEach((item) => {
-        if (item.food === order.food && item._id == order._id) {
+        if (item.food === order.food && item._id == order.donationId) {
           if (!flag) {
             if (item.quantity - order.quantity < 0)
               throw Error("Reduce the quantity");
@@ -87,14 +87,14 @@ const order = async (req, res) => {
       receiver_id: receiver._id,
     });
     if (existingOrder) {
-      existingOrder.orders = existingOrder.orders.concat([order]);
+      existingOrder.orders = existingOrder.orders.concat([{_id:order.donationId,food:order.food,quantity:order.quantity,image:order.image,donatedAt:order.donatedAt}]);
       const updatedOrder = await existingOrder.save();
       res.status(201).json(updatedOrder);
     } else {
       const newOrder = await Orders.create({
         donor_id: donor._id,
         receiver_id: receiver._id,
-        order:[order],
+        orders:[{_id:order.donationId,food:order.food,quantity:order.quantity,image:order.image,donatedAt:order.donatedAt}],
       });
       res.status(200).json(newOrder);
     }
