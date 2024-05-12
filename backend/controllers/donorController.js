@@ -1,4 +1,5 @@
 const Donors = require("../models/donorModel");
+const Orders = require("../models/ordersModel");
 const addDonation = async (req,res)=>{
   try {
     const donor = await Donors.findOne({userId:req.user});
@@ -15,13 +16,21 @@ const addDonation = async (req,res)=>{
 }
 
 const getLiveDonations = async(req,res)=>{
-  const {donations} = await Donors.findOne({userId:req.user});
-  res.status(200).json(donations);
+  try {
+    const {donations} = await Donors.findOne({userId:req.user});
+    res.status(200).json(donations);
+  } catch (error) {
+    res.status(500).json({error:error.message});
+  }
 }
 
 const getDonationHistory = async(req,res)=>{
-  const {donationHistory} = await Donors.findOne({userId:req.user});
-  res.status(200).json(donationHistory);
+  try {
+    const {donationHistory} = await Donors.findOne({userId:req.user});
+    res.status(200).json(donationHistory);
+  } catch (error) {
+    res.status(500).json({error:error.message});
+  }
 }
 
 const getDonorOrders = async (req, res) => {
@@ -38,5 +47,21 @@ const getDonorOrders = async (req, res) => {
   } 
 };
 
+const confirmOrder = async(req,res) => {
+  try {
+    const {receiverId, orderId, secret} = req.body
+    if(!receiverId || !orderId || !secret){
+      return res.status(400).json({message:"Receiver ID, Order ID, Secret are required"})
+    } 
+    const secretFound = await Orders.findOne({donor_id:req.user,receiver_id:receiverId, orders:{$eleMatch:{_id:orderId}}}).select("orders.order.secret")
+    if(secretFound && secret==secretFound){
+      return res.status(200).json({message:"Order confirmed successfully"})
+    }
+    res.status(404).json({message:"Invalid Secret"})
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+}
 
-module.exports = {addDonation,getDonationHistory,getLiveDonations,getDonorOrders};
+
+module.exports = {addDonation,getDonationHistory,getLiveDonations,getDonorOrders, confirmOrder};

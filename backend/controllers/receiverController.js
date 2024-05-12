@@ -115,4 +115,5 @@ const getReceiverOrders = async (req, res) => {
   } 
 };
 
-module.exports = { order, getReceiverOrders, getAllNearestDonations, getDonorDetails };
+
+module.exports = { order, getReceiverOrders, getAllNearestDonations, getDonorDetails};
