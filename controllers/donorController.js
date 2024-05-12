@@ -1,5 +1,7 @@
 const Donors = require("../models/donorModel");
 const Orders = require("../models/ordersModel");
+const Receivers = require("../models/receiverModel");
+const Users = require("../models/userModel");
 const addDonation = async (req,res)=>{
   try {
     const donor = await Donors.findOne({userId:req.user});
@@ -39,11 +41,15 @@ const getReceiverDetails = async(req,res) => {
     if(!receiverId || receiverId===''){
       return res.status(400).json("Receiver id is required to access this route")
     }
-    const receiver = await Users.findOne({_id:receiverId}).select('-password -latitude -longitude');
+    const receiver = await Receivers.findOne({_id:receiverId})
     if(!receiver){
       return res.status(404).json(`No receiver exists with id:${receiverId}`)
     }
-    res.status(200).json(receiver)
+    const user = await Users.findOne({_id:receiver.userId}).select('-password -latitude -longitude');
+    if(!user){
+      return res.status(404).json(`No user exists with id:${receiver.userId}`)
+    }
+    res.status(200).json(user)
   } catch (error) {
     res.status(500).json(error.message);
   }
