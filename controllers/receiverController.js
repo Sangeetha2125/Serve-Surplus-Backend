@@ -39,16 +39,24 @@ const getAllNearestDonations = async (req, res) => {
 };
 
 const getDonorDetails = async(req,res) => {
-  const {donorId} = req.query
+  let {donorId, isDonorReference} = req.query
   try {
     if(!donorId || donorId===''){
       return res.status(400).json("Donor id is required to access this route")
     }
-    const donor = await Users.findOne({_id:donorId}).select('-password -latitude -longitude');
-    if(!donor){
+    let donor = null;
+    if(isDonorReference){
+      donor = await Donors.findOne({_id:donorId})
+      if(!donor){
+        return res.status(404).json(`No donor exists with id:${donorId}`)
+      }
+      donorId = donor.userId
+    }
+    const user = await Users.findOne({_id:donorId}).select('-password -latitude -longitude');
+    if(!user){
       return res.status(404).json(`No donor exists with id:${donorId}`)
     }
-    res.status(200).json(donor)
+    res.status(200).json(user)
   } catch (error) {
     res.status(500).json(error.message);
   }
