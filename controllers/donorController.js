@@ -98,6 +98,7 @@ const getDonorOrders = async (req, res) => {
           date: order.date,
           id: order.id,
           status: order.status,
+          secret:order.secret,
         }
         allOrders.push(donOrder)
       })
