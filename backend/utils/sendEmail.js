@@ -6,7 +6,7 @@ const sendEmail = async (message,receiver)=>{
     host: "smtp.gmail.com",
     auth: {
       user: 'receiverftn@gmail.com',
-      pass: 'kxgorlnypqeyvgcf',
+      pass: process.env.EMAIL_PASSWORD,
     },
     secure: true,
   });
