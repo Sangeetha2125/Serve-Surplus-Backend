@@ -54,12 +54,13 @@ const getDonorDetails = async(req,res) => {
 }
 
 const order = async (req, res) => {
-  const { orders } = req.body;
+  const { order } = req.body;
   try {
     const { id } = req.params;
     const donor = await Donors.findOne({ userId: id });
-    const receiver = await Receivers.findOne({ userId: req.user._id });
-    orders.forEach((order) => {
+    const receiver = await Receivers.findOne({ userId: req.user });
+    console.log("donor",donor);
+    console.log("receiver",receiver)
       let flag = false;
       donor.donations.forEach((item) => {
         if (item.food === order.food && item._id == order._id) {
@@ -76,7 +77,6 @@ const order = async (req, res) => {
       if (!flag) {
         throw Error("Food not available");
       }
-    });
 
     const updatedDonation = await donor.save();
 
@@ -85,14 +85,14 @@ const order = async (req, res) => {
       receiver_id: receiver._id,
     });
     if (existingOrder) {
-      existingOrder.orders = existingOrder.orders.concat(orders);
+      existingOrder.orders = existingOrder.orders.concat([order]);
       const updatedOrder = await existingOrder.save();
       res.status(201).json(updatedOrder);
     } else {
       const newOrder = await Orders.create({
         donor_id: donor._id,
         receiver_id: receiver._id,
-        orders,
+        order:[order],
       });
       res.status(200).json(newOrder);
     }
