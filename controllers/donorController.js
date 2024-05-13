@@ -114,7 +114,7 @@ const confirmOrder = async(req,res) => {
     console.log(orders)
     let isValidSecret = false
     orders.orders.forEach((order)=>{
-      if(orderId===orderId){
+      if(order._id==orderId){
         if(order.secret==secret){
           order.status="Delivered";
           isValidSecret = true;
