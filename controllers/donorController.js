@@ -110,10 +110,11 @@ const getDonorOrders = async (req, res) => {
 const confirmOrder = async(req,res) => {
   try {
     const {orderId, donorId, receiverId, secret} = req.body
-    const orders = await Orders.find({donor_id:donorId, receiver_id:receiverId})
+    let orders = await Orders.findOne({donor_id:donorId, receiver_id:receiverId})
+    console.log(orders)
     let isValidSecret = false
     orders.orders.forEach((order)=>{
-      if(orderId===order._id){
+      if(orderId===orderId){
         if(order.secret==secret){
           order.status="Delivered";
           isValidSecret = true;
