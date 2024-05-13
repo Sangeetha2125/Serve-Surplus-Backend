@@ -75,7 +75,7 @@ const getDonorOrders = async (req, res) => {
               image: order.image,
               quantity: order.quantity,
               date: order.date,
-              id: order.id,
+              id: order._id,
               status: order.status,
             }
             statusOrders.push(donOrder)
@@ -95,7 +95,7 @@ const getDonorOrders = async (req, res) => {
           image: order.image,
           quantity: order.quantity,
           date: order.date,
-          id: order.id,
+          id: order._id,
           status: order.status,
         }
         allOrders.push(donOrder)

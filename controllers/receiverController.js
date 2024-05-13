@@ -151,7 +151,7 @@ const getReceiverOrders = async (req, res) => {
               image: order.image,
               quantity: order.quantity,
               date: order.date,
-              id: order.id,
+              id: order._id,
               status: order.status,
             }
             statusOrders.push(recOrder)
@@ -171,7 +171,7 @@ const getReceiverOrders = async (req, res) => {
           image: order.image,
           quantity: order.quantity,
           date: order.date,
-          id: order.id,
+          id: order._id,
           status: order.status,
         }
         allOrders.push(recOrder)
