@@ -6,7 +6,7 @@ const Receivers = require("../models/receiverModel");
 const getProfile = async(req,res)=>{
   try {
     const user = await User.findOne({_id:req.user})
-    res.status(200).json(user); 
+    res.status(200).json({name:user.name, email:user.email,area: user.area,city: user.city,  doorNumber: user.doorNumber,phone: user.phone,pincode: user.pincode,street: user.street,}); 
   }
   catch(error) {
     res.status(500).json({error:error.message});
