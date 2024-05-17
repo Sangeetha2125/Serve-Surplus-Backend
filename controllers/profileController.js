@@ -2,6 +2,17 @@ const Donors = require("../models/donorModel");
 const User = require("../models/userModel")
 const Receivers = require("../models/receiverModel");
 
+
+const getProfile = async(req,res)=>{
+  try {
+    const user = await User.findOne({_id:req.user})
+    res.status(200).json(user); 
+  }
+  catch(error) {
+    res.status(500).json({error:error.message});
+  }
+}
+
 const createProfile = async (req,res)=>{
     try {
       if(req.role.toUpperCase() === "DONOR"){
@@ -50,6 +61,6 @@ const addLocationCoordinates = async(req,res) => {
   }
 }
 
-module.exports = {createProfile,updateProfile,addLocationCoordinates};
+module.exports = {createProfile,updateProfile,addLocationCoordinates, getProfile};
 
 

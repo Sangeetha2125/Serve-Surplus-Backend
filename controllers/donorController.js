@@ -51,7 +51,7 @@ const getReceiverDetails = async(req,res) => {
     }
     res.status(200).json(user)
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({error:error.message});
   }
 }
 
@@ -103,7 +103,7 @@ const getDonorOrders = async (req, res) => {
     })
     res.status(200).json(allOrders);
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({error:error.message});
   } 
 };
 
@@ -128,7 +128,7 @@ const confirmOrder = async(req,res) => {
     res.status(400).json({message:"Invalid secret provided"})
   } catch (error) {
     console.log(error)
-    res.status(500).json({message: error.message});
+    res.status(500).json({error:error.message});
   }
 }
 

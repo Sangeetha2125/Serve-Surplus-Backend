@@ -58,7 +58,7 @@ const getDonorDetails = async(req,res) => {
     }
     res.status(200).json(user)
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({error:error.message});
   }
 }
 
@@ -127,7 +127,7 @@ const order = async (req, res) => {
       res.status(200).json(newOrder);
     }
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({error:error.message});
   }
 };
 
@@ -179,7 +179,7 @@ const getReceiverOrders = async (req, res) => {
     })
     res.status(200).json(allOrders);
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({error:error.message});
   } 
 };
 
