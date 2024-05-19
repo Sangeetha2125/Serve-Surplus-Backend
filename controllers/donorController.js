@@ -64,6 +64,7 @@ const getDonorOrders = async (req, res) => {
     }
     if(status!=null){
       const donorOrders = await Orders.find({ donor_id:donor._id});
+     
       let statusOrders = []
       donorOrders.forEach(donorOrder=>{
         donorOrder.orders.forEach(order=>{
@@ -84,7 +85,7 @@ const getDonorOrders = async (req, res) => {
       })
       return res.status(200).json(statusOrders);
     }
-    const donorOrders = await Orders.find({})
+    const donorOrders = await Orders.find({ donor_id:donor._id})
     let allOrders = []
     donorOrders.forEach(donorOrder=>{
       donorOrder.orders.forEach(order=>{
